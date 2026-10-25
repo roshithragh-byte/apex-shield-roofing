@@ -67,7 +67,7 @@ export interface RoofingCompanyConfig {
 
 export const roofingConfig: RoofingCompanyConfig = {
   whop: {
-    companyId: "biz_3hYjQ8xK9LmP2W",
+    companyId: "biz_zBWnpz7MPDz46s",
     appId: "app_apexroofing_template",
     sandbox: true,
     publishableKey: "pk_test_whop_roofing_live_demo",

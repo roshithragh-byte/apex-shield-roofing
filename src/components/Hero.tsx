@@ -33,7 +33,7 @@ export const Hero: React.FC = () => {
               <span>{roofingConfig.company.rating} Rating ({roofingConfig.company.reviewCount} Verified Reviews)</span>
             </span>
             <span className="text-slate-600">•</span>
-            <span className="text-slate-300 font-medium">{roofingConfig.company.serviceArea.metroDescription}</span>
+            <span className="text-slate-300 font-medium">{roofingConfig.serviceArea.metroDescription}</span>
           </div>
 
           {/* Main Headline */}

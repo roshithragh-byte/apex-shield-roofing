@@ -214,7 +214,11 @@ export const WhopCheckoutModal: React.FC<WhopCheckoutModalProps> = ({
                   elements={loadWhop()}
                   environment="sandbox"
                   appearance={{
-                    theme: 'dark',
+                    theme: {
+                      appearance: 'dark',
+                      accentColor: 'amber',
+                      grayColor: 'slate',
+                    },
                   }}
                   onLoadError={(err) => {
                     console.warn('Whop Elements initialization notice:', err);

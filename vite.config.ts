@@ -1,10 +1,19 @@
+import { whop } from '@whop/cli/vite';
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { devtools } from '@tanstack/devtools-vite';
+import { tanstackStart } from '@tanstack/react-start/plugin/vite';
+import viteReact from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import { cloudflare } from '@cloudflare/vite-plugin';
 
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 3000,
-    host: true
-  }
+  resolve: { tsconfigPaths: true },
+  plugins: [
+    whop({ disableTanstackDevtools: true }),
+    devtools(),
+    cloudflare({ viteEnvironment: { name: 'ssr' } }),
+    tailwindcss(),
+    tanstackStart(),
+    viteReact(),
+  ],
 });
