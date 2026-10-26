@@ -1,13 +1,15 @@
 # Apex Shield Roofing — Production-Ready Whop Websites Template
 
-[![Live on Whop](https://img.shields.io/badge/Whop_Websites-Live_Production-10b981?style=for-the-badge&logo=cloudflare)](https://apexshield-roofing-pro.whop.site)
+[![Live on Whop](https://img.shields.io/badge/Whop_Websites-Live_Production-10b981?style=for-the-badge&logo=cloudflare)](https://apexshield-roofing-pro.whop.app)
 [![Whop Elements](https://img.shields.io/badge/Whop_Elements-v1.9.0-f59e0b?style=for-the-badge)](https://docs.whop.com/elements)
 [![Tests Passing](https://img.shields.io/badge/Tests-9%2F9_Passing-emerald?style=for-the-badge)](./test/roofing-template.test.ts)
 
 A production-ready website template for US roofing companies built for **Whop Websites** and deployed live on Cloudflare Workers. Engineered to demonstrate Whop's end-to-end commerce capabilities to roofing and high-ticket service contractors.
 
-🌐 **Live Production Site:** [https://apexshield-roofing-pro.whop.site](https://apexshield-roofing-pro.whop.site)  
-🏢 **Whop App ID:** `app_Y4z44ib7PcAbXE`
+🌐 **Live whop.app URL:** [https://apexshield-roofing-pro.whop.app](https://apexshield-roofing-pro.whop.app)  
+🌐 **Hosted Domain:** [https://apexshield-roofing-pro.whop.site](https://apexshield-roofing-pro.whop.site)  
+🏢 **Whop App ID:** `app_Y4z44ib7PcAbXE`  
+💼 **Whop Business Account:** `biz_zBWnpz7MPDz46s`
 
 ---
 
@@ -61,11 +63,11 @@ Swap the company name, phone, license, emergency hours, covered zip codes, and p
 
 ## 📦 Configured Whop Plans
 
-| Plan | Price | Type | Purpose |
-| :--- | :--- | :--- | :--- |
-| **32-Point Drone & Hazard Inspection** | **$149** | One-Time Service | High-res 4K aerial drone scan & insurance claim diagnostic (credited 100% to approved repairs). |
-| **Project Commitment & Crew Slot Deposit** | **$500** | Project Deposit | Locks 5-day installation slot, orders materials, and vaults card-on-file for final balance settlement. |
-| **Emergency Leak Stop & Flashing Seal** | **$2,499** | Flat-Rate Service | Full chimney/valley flashing rebuild and 2-square shingle patch with 5-year workmanship warranty. |
+| Plan | Whop Plan ID | Price | Type | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| **32-Point Drone & Hazard Inspection** | `plan_QUzjUa4spCzgP` | **$149** | One-Time Service | High-res 4K aerial drone scan & insurance claim diagnostic (credited 100% to approved repairs). |
+| **Project Commitment & Crew Slot Deposit** | `plan_UCg8s2a6PgZXA` | **$500** | Project Deposit | Locks 5-day installation slot, orders materials, and vaults card-on-file for final balance settlement. |
+| **Emergency Leak Stop & Flashing Seal** | `plan_iWaKK4ioYaw9H` | **$2,499** | Flat-Rate Service | Full chimney/valley flashing rebuild and 2-square shingle patch with 5-year workmanship warranty. |
 
 ---
 
