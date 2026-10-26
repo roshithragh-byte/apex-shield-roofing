@@ -19,11 +19,11 @@ export const Navbar: React.FC = () => {
   const [alertDismissed, setAlertDismissed] = useState(false);
 
   const navLinks = [
-    { label: 'Services', href: '#services' },
-    { label: 'Plans & Deposit', href: '#pricing' },
-    { label: 'Financing', href: '#financing' },
-    { label: 'Service Area', href: '#service-area' },
-    { label: 'Reviews', href: '#reviews' },
+    { label: 'Services', href: '/#services' },
+    { label: 'Plans & Pricing', href: '/#pricing' },
+    { label: 'Financing', href: '/#financing' },
+    { label: 'Invoice Demo', href: '/invoice-demo' },
+    { label: 'Get Estimate', href: '/estimate' },
   ];
 
   return (
@@ -58,7 +58,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand Logo & Name */}
         <a
-          href="#hero"
+          href="/"
           className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded-lg"
         >
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform flex-shrink-0">
@@ -127,7 +127,7 @@ export const Navbar: React.FC = () => {
 
           {/* Primary CTA Button */}
           <a
-            href="#estimate-funnel"
+            href="/estimate"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             <span>Get Quote</span>

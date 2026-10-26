@@ -79,40 +79,40 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 2: Services */}
+          {/* Col 2: Services & Whop Flows */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-              Services
+              Services & Booking
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#services" className="hover:text-amber-400 transition-colors">
-                  Architectural Shingle Replacement
+                <a href="/estimate" className="hover:text-amber-400 transition-colors font-medium text-amber-300">
+                  Request an Estimate (Whop Leads) →
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-amber-400 transition-colors">
-                  Standing Seam Metal Roofing
+                <a href="/checkout?plan=deposit" className="hover:text-amber-400 transition-colors">
+                  Pay $500 Project Deposit →
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-amber-400 transition-colors">
-                  Emergency Leak Tarping & Repair
+                <a href="/checkout?plan=inspection" className="hover:text-amber-400 transition-colors">
+                  Book Drone Inspection ($149) →
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-amber-400 transition-colors">
-                  Infrared Drone Inspection ($149)
+                <a href="/checkout?plan=service" className="hover:text-amber-400 transition-colors">
+                  Flat-Rate Emergency Repair ($2,499) →
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-amber-400 transition-colors">
-                  Hail & Storm Claim Assistance
+                <a href="/invoice-demo" className="hover:text-amber-400 transition-colors font-medium text-amber-300">
+                  Final-Balance Invoice Demo →
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-amber-400 transition-colors">
-                  Commercial Flat / TPO Membrane
+                <a href="/#services" className="hover:text-amber-400 transition-colors">
+                  Full Service Catalog
                 </a>
               </li>
             </ul>

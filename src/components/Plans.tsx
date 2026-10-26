@@ -344,13 +344,36 @@ export const Plans: React.FC = () => {
                 <p className="text-[11px] text-center text-slate-400 mt-2.5 font-medium">
                   {footerNote}
                 </p>
+                <div className="text-center mt-2">
+                  <a
+                    href={`/checkout?plan=${
+                      plan.id === roofingConfig.plans.inspection.id
+                        ? 'inspection'
+                        : plan.id === roofingConfig.plans.deposit.id
+                        ? 'deposit'
+                        : 'service'
+                    }`}
+                    className="text-[11px] text-slate-400 hover:text-amber-400 transition-colors inline-flex items-center gap-1 font-medium"
+                  >
+                    <span>Or open dedicated checkout page</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </a>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
+        {/* Competitor Parity Deposit Note */}
+        <p className="text-center text-xs text-slate-400 mt-8">
+          Deposit flow: pay the $500 deposit → we do the job → the final balance is billed with a Whop invoice (auto-charged to your saved card, or emailed as a pay link).{' '}
+          <a href="/invoice-demo" className="text-amber-400 hover:text-amber-300 underline font-bold">
+            See the live Whop invoice demo →
+          </a>
+        </p>
+
         {/* Deposit Flow Explanation Card for Contractors */}
-        <div className="mt-16 max-w-4xl mx-auto p-7 rounded-3xl bg-slate-900/60 border border-white/10 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
+        <div className="mt-12 max-w-4xl mx-auto p-7 rounded-3xl bg-slate-900/60 border border-white/10 backdrop-blur-2xl shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-start gap-4">
@@ -367,10 +390,11 @@ export const Plans: React.FC = () => {
               </div>
             </div>
             <a
-              href="#roofer-demo"
-              className="whitespace-nowrap px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition-all hover:scale-105"
+              href="/invoice-demo"
+              className="whitespace-nowrap px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition-all hover:scale-105 flex items-center gap-1.5"
             >
-              Test Invoicing Demo ↓
+              <span>Test Invoicing Demo</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
