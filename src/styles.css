@@ -41,3 +41,178 @@
 .animate-fade-in {
   animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* =========================================================================
+   SVGator Liquid Glass Pricing Cards Keyframes & Animations
+   Reference: https://www.svgator.com/animation-templates/ui-elements/liquid-glass-pricing-cards-animated-3-plan-price-list
+   ========================================================================= */
+
+/* Elastic bounce scale entrance (matches SVGator card spring entrance) */
+@keyframes liquidGlassCardSpring {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) translateY(50px);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.08) translateY(-8px);
+  }
+  65% {
+    transform: scale(0.95) translateY(4px);
+  }
+  82% {
+    transform: scale(1.02) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Liquid fluid ambient drift for glowing background blobs */
+@keyframes liquidBlobDrift1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(45px, -35px) scale(1.15) rotate(15deg);
+  }
+  66% {
+    transform: translate(-35px, 25px) scale(0.92) rotate(-10deg);
+  }
+}
+
+@keyframes liquidBlobDrift2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate(-50px, 40px) scale(1.18) rotate(-18deg);
+  }
+}
+
+/* Specular light sheen reflection moving across glass */
+@keyframes glassSheenPass {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+/* Subtle price number pulse on entrance */
+@keyframes priceGlowPulse {
+  0% {
+    text-shadow: 0 0 0 rgba(245, 158, 11, 0);
+  }
+  50% {
+    text-shadow: 0 0 25px rgba(245, 158, 11, 0.6), 0 0 50px rgba(245, 158, 11, 0.3);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
+  }
+}
+
+/* Helper animation classes */
+.animate-liquid-spring {
+  animation: liquidGlassCardSpring 1.1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-liquid-blob-1 {
+  animation: liquidBlobDrift1 14s ease-in-out infinite alternate;
+}
+
+.animate-liquid-blob-2 {
+  animation: liquidBlobDrift2 18s ease-in-out infinite alternate;
+}
+
+.animate-price-glow {
+  animation: priceGlowPulse 1.8s ease-out forwards;
+}
+
+/* Liquid frosted glass card styling */
+.liquid-glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(15, 23, 42, 0.4) 100%
+  );
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.5),
+    0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.liquid-glass-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 2px 2px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.5),
+    0 30px 60px -12px rgba(0, 0, 0, 0.85);
+}
+
+.liquid-glass-card-featured {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 35%,
+    rgba(15, 23, 42, 0.5) 100%
+  );
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow:
+    inset 0 2px 2px 0 rgba(251, 191, 36, 0.6),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.5),
+    0 25px 60px -10px rgba(245, 158, 11, 0.25),
+    0 30px 60px -15px rgba(0, 0, 0, 0.85);
+  border: 1.5px solid rgba(251, 191, 36, 0.45);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.liquid-glass-card-featured:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(251, 191, 36, 0.7);
+  box-shadow:
+    inset 0 2px 3px 0 rgba(251, 191, 36, 0.85),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.5),
+    0 30px 70px -10px rgba(245, 158, 11, 0.35),
+    0 35px 70px -15px rgba(0, 0, 0, 0.9);
+}
+
+/* Glass specular sheen overlay */
+.liquid-sheen-highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.12) 45%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.12) 55%,
+    transparent 80%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.liquid-glass-card:hover .liquid-sheen-highlight,
+.liquid-glass-card-featured:hover .liquid-sheen-highlight {
+  opacity: 1;
+  animation: glassSheenPass 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
