@@ -68,9 +68,9 @@ export interface RoofingCompanyConfig {
 export const roofingConfig: RoofingCompanyConfig = {
   whop: {
     companyId: "biz_zBWnpz7MPDz46s",
-    appId: "app_apexroofing_template",
-    sandbox: true,
-    publishableKey: "pk_test_whop_roofing_live_demo",
+    appId: "app_Y4z44ib7PcAbXE",
+    sandbox: false,
+    publishableKey: "apik_Wp2RtWuSN3qwS_C7533140_C_84bbe0aaafbd3d340c0e9dc525b87607ecc1d463738acb0735607b7549dc4d",
   },
   company: {
     name: "Apex Shield Roofing & Restoration",
@@ -98,7 +98,7 @@ export const roofingConfig: RoofingCompanyConfig = {
   },
   plans: {
     inspection: {
-      id: "plan_insp_149",
+      id: "plan_QUzjUa4spCzgP",
       name: "32-Point Drone & Hazard Inspection",
       price: 149,
       tagline: "Comprehensive Diagnostic & Insurance Report",
@@ -112,7 +112,7 @@ export const roofingConfig: RoofingCompanyConfig = {
       ]
     },
     deposit: {
-      id: "plan_dep_500",
+      id: "plan_UCg8s2a6PgZXA",
       name: "Project Commitment & Crew Slot Deposit",
       price: 500,
       tagline: "Lock In Production Schedule & Material Order",
@@ -127,7 +127,7 @@ export const roofingConfig: RoofingCompanyConfig = {
       ]
     },
     flatRateService: {
-      id: "plan_flat_2499",
+      id: "plan_iWaKK4ioYaw9H",
       name: "Emergency Leak Stop & Flashing Seal",
       price: 2499,
       tagline: "Guaranteed Water-Tight Same-Week Fix",

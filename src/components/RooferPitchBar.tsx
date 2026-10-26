@@ -35,20 +35,19 @@ export const RooferPitchBar: React.FC = () => {
   const [isDispatching, setIsDispatching] = useState(false);
   const [lastDispatchedId, setLastDispatchedId] = useState<string | null>(null);
 
-  const handleCreateFinalInvoice = (e: React.FormEvent) => {
+  const handleCreateFinalInvoice = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!invoiceAmount || invoiceAmount <= 0) return;
 
     setIsDispatching(true);
-    setTimeout(() => {
-      const inv = dispatchFinalInvoice({
+    try {
+      const inv = await dispatchFinalInvoice({
         amount: invoiceAmount,
         description: invoiceDesc,
         autoCharge: autoCharge && !!storedPaymentMethod,
       });
 
       setLastDispatchedId(inv.id);
-      setIsDispatching(false);
 
       // Track event
       whopTrack.serviceViewed({
@@ -57,7 +56,9 @@ export const RooferPitchBar: React.FC = () => {
         price: invoiceAmount,
         category: 'final_invoice',
       });
-    }, 800);
+    } finally {
+      setIsDispatching(false);
+    }
   };
 
   return (
@@ -229,9 +230,21 @@ export const RooferPitchBar: React.FC = () => {
                   </label>
 
                   {invoices.length > 0 && (
-                    <span className="text-emerald-400 font-medium">
-                      ✓ {invoices.length} {invoices.length === 1 ? 'Invoice' : 'Invoices'} Succeeded
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-400 font-medium text-[10px]">
+                        ✓ {invoices[0].id} ({invoices[0].invoiceNumber || '#0001'})
+                      </span>
+                      {invoices[0].payOnlineUrl && (
+                        <a
+                          href={invoices[0].payOnlineUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-amber-400 hover:text-amber-300 underline text-[10px] flex items-center gap-0.5"
+                        >
+                          View on Whop <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                      )}
+                    </div>
                   )}
                 </div>
               </form>

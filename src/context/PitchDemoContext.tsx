@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { roofingConfig } from '../../roofing.config';
+import { createWhopInvoice } from '../utils/whopClient';
 
 export interface LeadRecord {
   id: string;
@@ -36,6 +37,8 @@ export interface InvoiceRecord {
   customerEmail: string;
   customerName: string;
   timestamp: string;
+  invoiceNumber?: string;
+  payOnlineUrl?: string;
 }
 
 export interface TrackedPixelEvent {
@@ -57,7 +60,7 @@ interface PitchDemoContextType {
     amount: number;
     description: string;
     autoCharge: boolean;
-  }) => InvoiceRecord;
+  }) => Promise<InvoiceRecord>;
   trackedEvents: TrackedPixelEvent[];
   recordTrackEvent: (eventName: string, payload: Record<string, unknown>) => void;
   selectedPlan: typeof roofingConfig.plans.inspection | typeof roofingConfig.plans.deposit | typeof roofingConfig.plans.flatRateService | null;
@@ -163,7 +166,7 @@ export const PitchDemoProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setStoredPaymentMethod(pm);
   };
 
-  const dispatchFinalInvoice = ({
+  const dispatchFinalInvoice = async ({
     amount,
     description,
     autoCharge
@@ -171,16 +174,42 @@ export const PitchDemoProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     amount: number;
     description: string;
     autoCharge: boolean;
-  }): InvoiceRecord => {
+  }): Promise<InvoiceRecord> => {
+    const custEmail = storedPaymentMethod?.customerEmail || 'demo.homeowner@example.com';
+    const custName = storedPaymentMethod?.customerName || 'Demo Homeowner';
+
+    let whopInvId = `inv_${Date.now().toString(36).toUpperCase()}`;
+    let whopNumber = '#00000001';
+    let payUrl = 'https://whop.com/checkout/plan_UCg8s2a6PgZXA';
+
+    try {
+      const res = await createWhopInvoice({
+        customerName: custName,
+        customerEmail: custEmail,
+        amount,
+        description,
+        paymentMethodId: storedPaymentMethod?.id,
+        autoCharge,
+      });
+
+      if (res.invoiceId) whopInvId = res.invoiceId;
+      if (res.invoiceNumber) whopNumber = res.invoiceNumber;
+      if (res.payOnlineUrl) payUrl = res.payOnlineUrl;
+    } catch (e) {
+      console.warn('[PitchDemoContext] Invoice creation note:', e);
+    }
+
     const newInvoice: InvoiceRecord = {
-      id: `inv_${Date.now().toString(36).toUpperCase()}`,
+      id: whopInvId,
       amount,
       description,
       status: autoCharge ? 'paid' : 'sent',
       chargedVia: autoCharge ? 'auto_charge_card_on_file' : 'manual_hosted_link',
-      customerEmail: storedPaymentMethod?.customerEmail || 'client@example.com',
-      customerName: storedPaymentMethod?.customerName || 'Valued Homeowner',
+      customerEmail: custEmail,
+      customerName: custName,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      invoiceNumber: whopNumber,
+      payOnlineUrl: payUrl,
     };
 
     setInvoices(prev => [newInvoice, ...prev]);

@@ -88,7 +88,7 @@ export const EstimateFunnel: React.FC = () => {
       name: formData.name,
     });
 
-    setCreatedLeadId(registeredLead.id);
+    setCreatedLeadId(leadResult.leadId || registeredLead.id);
     setLoading(false);
     setStep(4);
   };

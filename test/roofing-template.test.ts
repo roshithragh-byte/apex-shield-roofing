@@ -43,16 +43,16 @@ describe('Roofing Template Configuration', () => {
   it('defines the 3 required Whop plans with exact pricing', () => {
     // 1. One-time inspection fee ($149)
     expect(roofingConfig.plans.inspection.price).toBe(149);
-    expect(roofingConfig.plans.inspection.id).toBe('plan_insp_149');
+    expect(roofingConfig.plans.inspection.id).toBe('plan_QUzjUa4spCzgP');
 
     // 2. Project deposit ($500)
     expect(roofingConfig.plans.deposit.price).toBe(500);
-    expect(roofingConfig.plans.deposit.id).toBe('plan_dep_500');
+    expect(roofingConfig.plans.deposit.id).toBe('plan_UCg8s2a6PgZXA');
     expect(roofingConfig.plans.deposit.depositOnly).toBe(true);
 
     // 3. Flat-rate service ($2,499)
     expect(roofingConfig.plans.flatRateService.price).toBe(2499);
-    expect(roofingConfig.plans.flatRateService.id).toBe('plan_flat_2499');
+    expect(roofingConfig.plans.flatRateService.id).toBe('plan_iWaKK4ioYaw9H');
   });
 
   it('includes service area regions and zip codes', () => {
