@@ -8,7 +8,7 @@ import { whopTrack } from '../utils/tracking';
  * Animated SVG Checkmark matching the SVGator Liquid Glass template:
  * Outer circle draws clockwise (circumference ~71), followed by inner checkmark path (length ~19).
  */
-const AnimatedLiquidCheck: React.FC<{ active: boolean; delayMs: number }> = ({ active, delayMs }) => {
+export const AnimatedLiquidCheck: React.FC<{ active: boolean; delayMs: number }> = ({ active, delayMs }) => {
   return (
     <svg
       className="w-5 h-5 shrink-0 overflow-visible"
@@ -50,10 +50,11 @@ const AnimatedLiquidCheck: React.FC<{ active: boolean; delayMs: number }> = ({ a
 /**
  * Animated price counter synchronized with the liquid glass card spring entrance.
  */
-const AnimatedPrice: React.FC<{ target: number; active: boolean; delayMs: number }> = ({
+export const AnimatedPrice: React.FC<{ target: number; active: boolean; delayMs: number; prefix?: string }> = ({
   target,
   active,
   delayMs,
+  prefix = '$',
 }) => {
   const [displayValue, setDisplayValue] = useState(target);
 
@@ -70,7 +71,6 @@ const AnimatedPrice: React.FC<{ target: number; active: boolean; delayMs: number
       const step = (timestamp: number) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        // Easing out cubic
         const easeOut = 1 - Math.pow(1 - progress, 3);
         const current = Math.floor(easeOut * target);
         setDisplayValue(current);
@@ -90,8 +90,8 @@ const AnimatedPrice: React.FC<{ target: number; active: boolean; delayMs: number
   }, [active, target, delayMs]);
 
   return (
-    <span className="text-4xl sm:text-5xl font-black text-white tracking-tight animate-price-glow">
-      ${displayValue.toLocaleString()}
+    <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight animate-price-glow">
+      {prefix}{displayValue.toLocaleString()}
     </span>
   );
 };
@@ -231,15 +231,15 @@ export const Plans: React.FC = () => {
           </div>
         </div>
 
-        {/* 3-Plan Liquid Glass Pricing Cards Grid */}
+        {/* 3-Plan Liquid Glass Pricing Cards Grid - Extra top padding so floating badge is never cut off */}
         <div
           key={animationKey}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch pt-4"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch pt-8 sm:pt-10"
         >
-          {planItems.map(({ plan, badge, popular, cta, footerNote, delayMs, featured }, cardIdx) => (
+          {planItems.map(({ plan, badge, popular, cta, footerNote, delayMs, featured }) => (
             <div
               key={plan.id}
-              className={`rounded-[32px] sm:rounded-[38px] p-8 sm:p-9 flex flex-col justify-between ${
+              className={`rounded-[32px] sm:rounded-[38px] p-7 sm:p-8 flex flex-col justify-between relative transition-all ${
                 featured ? 'liquid-glass-card-featured' : 'liquid-glass-card'
               } ${isSectionVisible ? 'animate-liquid-spring' : 'opacity-0 scale-75'}`}
               style={{
@@ -247,12 +247,14 @@ export const Plans: React.FC = () => {
                 animationFillMode: 'both',
               }}
             >
-              {/* Glass Specular Sheen Pass Overlay */}
-              <div className="liquid-sheen-highlight" />
+              {/* Inner wrapper clipping the sheen highlight to card radius without clipping the top badge */}
+              <div className="absolute inset-0 rounded-[32px] sm:rounded-[38px] overflow-hidden pointer-events-none">
+                <div className="liquid-sheen-highlight" />
+              </div>
 
-              {/* Popular Job Flow Floating Pill */}
+              {/* Popular Job Flow Floating Pill - Fully visible outside the card */}
               {popular && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-slate-950 font-black text-[11px] uppercase tracking-wider shadow-lg shadow-amber-500/30 flex items-center gap-1.5 z-20">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-xl shadow-amber-500/35 flex items-center gap-1.5 z-30 whitespace-nowrap border border-amber-300/60">
                   <Sparkles className="w-3.5 h-3.5 fill-slate-950" />
                   <span>Most Requested Job Flow</span>
                 </div>
@@ -260,26 +262,33 @@ export const Plans: React.FC = () => {
 
               <div>
                 {/* Header: Badge & Setup Intent Indicator */}
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between gap-2 mb-4">
                   <span className="text-xs font-extrabold text-amber-400 uppercase tracking-widest">
                     {badge}
                   </span>
                   {plan.depositOnly && (
-                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/40 flex items-center gap-1 backdrop-blur-md">
+                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/40 flex items-center gap-1 backdrop-blur-md whitespace-nowrap shrink-0">
                       <Lock className="w-3 h-3" /> Setup Intent
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
-                  {plan.name}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-300/80 mb-6 leading-relaxed min-h-[40px]">
-                  {plan.description}
-                </p>
+                {/* Symmetrically aligned title container */}
+                <div className="min-h-[58px] sm:min-h-[66px] flex items-center mb-2.5">
+                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug">
+                    {plan.name}
+                  </h3>
+                </div>
+
+                {/* Symmetrically aligned description container */}
+                <div className="min-h-[60px] sm:min-h-[70px] mb-6">
+                  <p className="text-xs sm:text-sm text-slate-300/85 leading-relaxed">
+                    {plan.description}
+                  </p>
+                </div>
 
                 {/* Animated Liquid Glass Price Container */}
-                <div className="mb-8 p-5 rounded-2xl bg-slate-950/60 border border-white/10 backdrop-blur-xl relative overflow-hidden group shadow-inner">
+                <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-slate-950/60 border border-white/10 backdrop-blur-xl relative overflow-hidden group shadow-inner min-h-[96px] flex flex-col justify-center">
                   {/* Subtle inner reflection highlight */}
                   <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                   
@@ -300,13 +309,13 @@ export const Plans: React.FC = () => {
                 </div>
 
                 {/* Animated Checkmark Feature List */}
-                <div className="space-y-4 mb-8">
+                <div className="space-y-3 mb-8 min-h-[175px]">
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                     What's included:
                   </p>
-                  <ul className="space-y-3">
+                  <ul className="space-y-2.5">
                     {plan.features.map((feat, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-slate-200">
+                      <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
                         <AnimatedLiquidCheck
                           active={isSectionVisible}
                           delayMs={delayMs + 400 + idx * 90}
@@ -332,7 +341,7 @@ export const Plans: React.FC = () => {
                   <span>{cta}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
-                <p className="text-[11px] text-center text-slate-400 mt-3 font-medium">
+                <p className="text-[11px] text-center text-slate-400 mt-2.5 font-medium">
                   {footerNote}
                 </p>
               </div>
