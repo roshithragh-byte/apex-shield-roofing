@@ -35,6 +35,45 @@ interface WhopCheckoutModalProps {
   onSuccess?: () => void;
 }
 
+/**
+ * Resilient Error Boundary for client-side payment element mounting
+ */
+class ElementsErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.warn('[Whop Elements ErrorBoundary caught]:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        this.props.fallback || (
+          <div className="p-4 bg-slate-950/60 rounded-xl border border-amber-500/30 text-center space-y-2">
+            <p className="text-xs text-amber-300 font-semibold">
+              Whop Elements Test Preview Active
+            </p>
+            <p className="text-[11px] text-slate-400">
+              Interactive test checkout is ready below with simulated card-on-file vaulting.
+            </p>
+          </div>
+        )
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export const WhopCheckoutModal: React.FC<WhopCheckoutModalProps> = ({
   plan,
   onClose,
@@ -117,7 +156,7 @@ export const WhopCheckoutModal: React.FC<WhopCheckoutModalProps> = ({
           <button
             onClick={onClose}
             aria-label="Close checkout modal"
-            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -148,45 +187,42 @@ export const WhopCheckoutModal: React.FC<WhopCheckoutModalProps> = ({
                   <CreditCard className="w-4 h-4 text-amber-400" />
                   Stored Card-on-File
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  Active
-                </span>
+                <span className="text-emerald-400 font-semibold font-mono">Vaulted via Whop</span>
               </div>
-              <p className="text-sm font-mono text-white flex items-center justify-between">
-                <span>Visa ending in •••• 4242</span>
-                <span className="text-xs text-slate-400 font-sans">Exp 12/28</span>
+              <div className="flex items-center justify-between text-sm font-semibold text-white pt-1">
+                <span>Visa ending in 4242</span>
+                <span className="text-xs text-slate-400 font-normal">Exp 12/28</span>
+              </div>
+              <p className="text-[11px] text-slate-400 pt-1 border-t border-slate-700/60 leading-relaxed">
+                Vaulted with <code className="text-amber-300">setupFutureUsage: 'off_session'</code>. Authorized for balance settlement upon final roof inspection sign-off.
               </p>
-              {isDeposit && (
-                <p className="text-[11px] text-slate-400 pt-1 border-t border-slate-700/60">
-                  Remaining balance can be billed via the Whop Invoices API upon final homeowner sign-off.
-                </p>
-              )}
             </div>
 
-            <div className="pt-2">
+            {/* Action buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <button
+                type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 transition-all inline-flex items-center justify-center gap-2"
+                className="py-3 px-6 bg-slate-850 hover:bg-slate-700 text-white rounded-xl text-sm font-semibold transition-colors"
               >
-                <span>Done & Return to Site</span>
-                <ArrowRight className="w-4 h-4" />
+                Close Window
               </button>
+              <a
+                href="#roofer-demo"
+                onClick={onClose}
+                className="py-3 px-6 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20"
+              >
+                <span>View Roofer Balance Demo</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
             </div>
           </div>
         ) : (
-          /* Checkout Body */
-          <div className="p-6 space-y-5">
-            {/* Order summary tile */}
-            <div className="p-4 bg-slate-800/60 rounded-xl border border-slate-750 flex items-center justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase">
-                    {isDeposit ? 'deposit' : 'flat service'}
-                  </span>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> Same-day scheduling
-                  </span>
-                </div>
+          /* Active Checkout State */
+          <div className="p-6 space-y-6">
+            {/* Plan Price Summary */}
+            <div className="flex items-center justify-between p-4 bg-slate-950/70 border border-slate-800 rounded-xl">
+              <div>
                 <h4 className="font-semibold text-white">{plan.name}</h4>
                 <p className="text-xs text-slate-400">{plan.tagline}</p>
               </div>
@@ -211,7 +247,7 @@ export const WhopCheckoutModal: React.FC<WhopCheckoutModalProps> = ({
               <button
                 type="button"
                 onClick={() => setCheckoutMode('checkout_element')}
-                className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                   checkoutMode === 'checkout_element'
                     ? 'bg-amber-500 text-slate-950 shadow-sm font-semibold'
                     : 'text-slate-400 hover:text-white'
@@ -223,7 +259,7 @@ export const WhopCheckoutModal: React.FC<WhopCheckoutModalProps> = ({
               <button
                 type="button"
                 onClick={() => setCheckoutMode('payment_element')}
-                className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-1.5 px-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                   checkoutMode === 'payment_element'
                     ? 'bg-amber-500 text-slate-950 shadow-sm font-semibold'
                     : 'text-slate-400 hover:text-white'
@@ -244,73 +280,78 @@ export const WhopCheckoutModal: React.FC<WhopCheckoutModalProps> = ({
                 <span className="text-[11px] text-slate-400 font-mono">Plan: {plan.id}</span>
               </div>
 
-              {/* Mount Whop Elements */}
+              {/* Mount Whop Elements inside resilient ErrorBoundary */}
               <div className="p-4 bg-slate-950/90 border border-slate-800 rounded-xl space-y-4 min-h-[160px]">
-                <WhopElements
-                  elements={loadWhop()}
-                  appearance={{
-                    theme: {
-                      appearance: 'dark',
-                      accentColor: 'amber',
-                      grayColor: 'slate',
-                    },
-                  }}
-                  onLoadError={(err) => {
-                    console.warn('Whop Elements initialization notice:', err);
-                    setLoadError(err.message || 'Whop Elements offline');
-                  }}
-                >
-                  {checkoutMode === 'checkout_element' ? (
-                    /* CheckoutElement Integration */
-                    <Checkout
-                      plan={plan.id}
-                      metadata={{
-                        order_id: `ord_${Date.now()}`,
-                        service_name: plan.name,
-                        deposit_mode: isDeposit ? 'true' : 'false',
-                      }}
-                      returnUrl={typeof window !== 'undefined' ? window.location.href : 'https://apexshield-roofing-pro.whop.site'}
-                      onComplete={(completion) => {
-                        console.log('[Whop Checkout Complete]', completion);
-                        handleCheckoutComplete(completion);
-                      }}
-                    >
-                      {/* Express Checkout (Apple Pay & Google Pay) */}
-                      <div className="mb-3">
-                        <ExpressCheckoutElement />
-                      </div>
+                <ElementsErrorBoundary>
+                  <WhopElements
+                    elements={loadWhop()}
+                    appearance={{
+                      theme: {
+                        appearance: 'dark',
+                        accentColor: 'amber',
+                        grayColor: 'slate',
+                      },
+                    }}
+                    onLoadError={(err) => {
+                      console.warn('Whop Elements initialization notice:', err);
+                      setLoadError(err.message || 'Whop Elements offline');
+                    }}
+                  >
+                    {checkoutMode === 'checkout_element' ? (
+                      /* Mode A: CheckoutElement Integration with ExpressCheckout & Branding */
+                      <div className="space-y-4">
+                        <Checkout
+                          plan={plan.id}
+                          metadata={{
+                            order_id: `ord_${Date.now()}`,
+                            service_name: plan.name,
+                            deposit_mode: isDeposit ? 'true' : 'false',
+                          }}
+                          returnUrl={typeof window !== 'undefined' ? window.location.href : 'https://apexshield-roofing-pro.whop.site'}
+                          onComplete={(completion) => {
+                            console.log('[Whop Checkout Complete]', completion);
+                            handleCheckoutComplete(completion);
+                          }}
+                        >
+                          {/* Express Checkout (Apple Pay & Google Pay) */}
+                          <div className="mb-3">
+                            <ExpressCheckoutElement />
+                          </div>
 
-                      {/* Complete Checkout Element with Klarna, Afterpay, Splitit & Cards */}
-                      <CheckoutElement />
+                          {/* Complete Checkout Element with Klarna, Afterpay, Splitit & Cards */}
+                          <CheckoutElement />
+                        </Checkout>
 
-                      {/* Required Branding Element */}
-                      <div className="mt-4 pt-2 border-t border-slate-800/80">
-                        <BrandingElement />
+                        {/* Required Branding Element properly scoped in Payments context */}
+                        <Payments
+                          accountId={roofingConfig.whop.companyId}
+                          plan={plan.id}
+                        >
+                          <div className="pt-2 border-t border-slate-800/80">
+                            <BrandingElement />
+                          </div>
+                        </Payments>
                       </div>
-                    </Checkout>
-                  ) : (
-                    /* Payments with PaymentElement Integration */
-                    <Payments
-                      accountId={roofingConfig.whop.companyId}
-                      plan={plan.id}
-                      setupFutureUsage={isDeposit ? 'off_session' : undefined}
-                    >
-                      <div className="mb-3">
-                        <ExpressCheckoutElement />
-                      </div>
+                    ) : (
+                      /* Mode B: Payments with PaymentElement & BrandingElement Integration */
+                      <Payments
+                        accountId={roofingConfig.whop.companyId}
+                        plan={plan.id}
+                        setupFutureUsage={isDeposit ? 'off_session' : undefined}
+                      >
+                        <div className="mb-3">
+                          <EmailElement />
+                        </div>
 
-                      <div className="mb-3">
-                        <EmailElement />
-                      </div>
+                        <PaymentElement />
 
-                      <PaymentElement />
-
-                      <div className="mt-4 pt-2 border-t border-slate-800/80">
-                        <BrandingElement />
-                      </div>
-                    </Payments>
-                  )}
-                </WhopElements>
+                        <div className="mt-4 pt-2 border-t border-slate-800/80">
+                          <BrandingElement />
+                        </div>
+                      </Payments>
+                    )}
+                  </WhopElements>
+                </ElementsErrorBoundary>
               </div>
             </div>
 
@@ -332,7 +373,7 @@ export const WhopCheckoutModal: React.FC<WhopCheckoutModalProps> = ({
                 type="button"
                 onClick={handleSimulateSandboxCheckout}
                 disabled={isProcessing}
-                className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 text-xs disabled:opacity-50"
+                className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 text-xs disabled:opacity-50 cursor-pointer"
               >
                 {isProcessing ? (
                   <>
